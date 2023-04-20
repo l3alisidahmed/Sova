@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sova/models/manage_user.dart';
 import 'package:sova/presentation/SignUp.dart';
 import 'package:sova/component/sovBarWithoutArrowback.dart';
 import 'package:sova/presentation/ForgetPassword.dart';
@@ -15,6 +16,12 @@ class _LogInState extends State<LogIn> {
   bool _value = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
+  // I Added This
+  final newUser = NewUser();
+  String email = '';
+  String password = '';
+  Widget error = const Text("");
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,6 +43,13 @@ class _LogInState extends State<LogIn> {
                   ),
                   const SizedBox(height: 5),
                   TextFormField(
+                    // I Added This
+                    onChanged: (value) {
+                      setState(() {
+                        email = value;
+                      });
+                    },
+                    /**************/
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     style: const TextStyle(
@@ -58,8 +72,11 @@ class _LogInState extends State<LogIn> {
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 20, horizontal: 30)),
                     validator: (value) {
-                      if (emailController.text.isEmpty) {
+                      if (value!
+                          .isEmpty /* || RegExp([\S]+$).hasMatch(value)*/) {
                         return 'Invalid email';
+                      } else {
+                        return null;
                       }
                     },
                   ),
@@ -75,6 +92,13 @@ class _LogInState extends State<LogIn> {
                   ),
                   const SizedBox(height: 5),
                   TextFormField(
+                    // I Added This
+                    onChanged: (value) {
+                      setState(() {
+                        password = value;
+                      });
+                    },
+                    /**************/
                     obscureText: true,
                     keyboardType: TextInputType.emailAddress,
                     style: const TextStyle(
@@ -91,7 +115,7 @@ class _LogInState extends State<LogIn> {
                           borderSide:
                               BorderSide(width: 1.5, color: Colors.blue),
                         ),
-                        labelText: 'Must be 8 charcter or more',
+                        labelText: 'Must be at least 8 charcters',
                         hintText: "********",
                         enabledBorder: OutlineInputBorder(
                           borderSide:
@@ -101,7 +125,7 @@ class _LogInState extends State<LogIn> {
                             EdgeInsets.symmetric(vertical: 20, horizontal: 30)),
                     validator: (value) {
                       if (value!.isEmpty || value.length < 8) {
-                        return 'your password must be 8 charcater';
+                        return 'Your password must be at least 8 charcaters';
                       }
                     },
                   ),
@@ -133,14 +157,14 @@ class _LogInState extends State<LogIn> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return forgetPassword();
+                                    return const forgetPassword();
                                   },
                                 ),
                               );
                             });
                           },
                           child: const Text(
-                            'Forgeot Password',
+                            'Forgot Password',
                             style: TextStyle(
                               color: Color.fromARGB(255, 0, 76, 255),
                             ),
@@ -159,11 +183,25 @@ class _LogInState extends State<LogIn> {
             height: 50,
             margin: const EdgeInsets.only(top: 10, bottom: 10),
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (widget._formKey.currentState!.validate()) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Processing Data')),
                   );
+                  // I Added This
+                  dynamic user = await newUser.signInUser(email, password);
+                  if (user == null) {
+                    print("Email Doesn't Exist!!");
+                    error = const Text(
+                      "Email Doesn't Exist!!",
+                      style: TextStyle(color: Colors.red),
+                    );
+                  } else {
+                    print("Logged In Successfully");
+                    print(user.uid);
+                    print(user.email);
+                  }
+                  /*******************/
                 }
               },
               style: const ButtonStyle(
@@ -173,6 +211,7 @@ class _LogInState extends State<LogIn> {
               child: const Text('Log in'),
             ),
           ),
+          error,
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
