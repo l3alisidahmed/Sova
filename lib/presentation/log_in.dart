@@ -3,6 +3,7 @@ import 'package:sova/models/manage_user.dart';
 import 'package:sova/presentation/SignUp.dart';
 import 'package:sova/component/sovBarWithoutArrowback.dart';
 import 'package:sova/presentation/ForgetPassword.dart';
+import 'package:sova/presentation/sova.dart';
 
 class LogIn extends StatefulWidget {
   LogIn({super.key});
@@ -56,6 +57,10 @@ class _LogInState extends State<LogIn> {
                       color: Color.fromARGB(255, 0, 76, 255),
                     ),
                     decoration: const InputDecoration(
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(width: 1.5, color: Colors.blue),
+                        ),
                         errorBorder: OutlineInputBorder(
                           borderSide: BorderSide(width: 1.5, color: Colors.red),
                         ),
@@ -105,12 +110,16 @@ class _LogInState extends State<LogIn> {
                       color: Color.fromARGB(255, 0, 76, 255),
                     ),
                     decoration: const InputDecoration(
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(width: 1.5, color: Colors.blue),
+                        ),
                         errorBorder: OutlineInputBorder(
                           borderSide: BorderSide(width: 1.5, color: Colors.red),
                         ),
                         // focusedErrorBorder: OutlineInputBorder(
                         //   borderSide: BorderSide(width: 1.5, color: Colors.red),
-                        // ),
+                        //  ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
                               BorderSide(width: 1.5, color: Colors.blue),
@@ -185,8 +194,16 @@ class _LogInState extends State<LogIn> {
             child: ElevatedButton(
               onPressed: () async {
                 if (widget._formKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
+                  setState(
+                    () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return const Sova();
+                          },
+                        ),
+                      );
+                    },
                   );
                   // I Added This
                   dynamic user = await newUser.signInUser(email, password);
