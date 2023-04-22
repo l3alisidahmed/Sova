@@ -46,6 +46,13 @@ class _forgetPasswordState extends State<forgetPassword> {
                         color: Color.fromARGB(255, 0, 76, 255),
                       ),
                       decoration: const InputDecoration(
+                        focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 1.5, color: Colors.blue)),
+                                errorBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(width: 1.5, color: Colors.red),
+                                ),
                           focusedBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(width: 1.5, color: Colors.blue),
